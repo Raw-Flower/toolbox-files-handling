@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    {% include 'image_mngt/includes/bootstrap_css.html' %}
+</head>
+<body>
+    <div class='container-fluid mt-2'>
+        <div class='row'>
+            <div class='col-3'>
+                <div class="card">
+                    <div class="card-header">Main menu</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><a href='#' class="card-link">Add record</a></li>
+                        <li class="list-group-item"><a href='#' class="card-link">Grid</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class='col-9'>
+                {% block body %}
+                {% endblock body %}
+            </div>
+        </div>
+    </div>
+{% include 'image_mngt/includes/bootstrap_js.html' %}
+</body>
+</html>
