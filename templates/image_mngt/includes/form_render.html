@@ -1,0 +1,28 @@
+{% load custom_tags %}
+{% if form %}
+    <fieldset class="border rounded-2 p-3">
+        <legend class="float-none w-auto px-3" >{{title}}</legend>
+        {% for field in form %}
+            <div class='mb-3'>
+                <label for="{{field.id_for_label}}">{{field.label}}</label>
+                {{field|setValidationClass}}
+                {% if field.data == None %}
+                    <div id="{{field.auto_id}}_helptext" class="form-text">
+                        {{field.help_text}}
+                    </div>   
+                {% endif %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="invalid-feedback">
+                            {{error}}
+                        </div>
+                    {% endfor %}
+                    {% else %}
+                        <div class='valid-feedback'>Looks good!</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </fieldset>
+{% endif %}
+    
+
