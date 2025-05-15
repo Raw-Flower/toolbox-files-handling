@@ -1,9 +1,10 @@
 {% extends 'image_mngt/base/base.html' %}
 {% block title %}Record creation{% endblock title %}
 {% block body %}
+{% include 'image_mngt/includes/messages.html' %}
     <div class="card">
         <div class="card-body">
-            <form enctype='multipart/form-data'>
+            <form enctype='multipart/form-data' novalidate method='POST'>
                 {% include 'image_mngt/includes/form_render.html' with form=form title='Image record information' only  %}
                 {% if form %}
                     <div class='mt-3'>
