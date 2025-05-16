@@ -6,7 +6,7 @@ class SampleRecordAdmin(admin.ModelAdmin):
     list_display = ['id','title','createtime','updatetime','status']
     readonly_fields = ['createtime','updatetime','foldername']
     list_filter = ['status']
-    ordering = ['id']
+    ordering = ['-id']
     search_fields = ['title']
 
 class ImageRecordAdmin(admin.ModelAdmin):

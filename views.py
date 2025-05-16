@@ -31,5 +31,3 @@ class ImageRecorCreationView(FormView):
     def form_invalid(self, form):
         messages.error(request=self.request, message='Your data submitted has some errors. please check and try again.')
         return super().form_invalid(form)
-
-    

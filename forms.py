@@ -1,8 +1,8 @@
 from django import forms
-from .models import SampleRecord, ImageRecord
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, ProhibitNullCharactersValidator, FileExtensionValidator
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -23,19 +23,36 @@ class MultipleFileField(forms.FileField):
 def imagesTotalSize_validator(image):
     imageSize = round(image.size/1024,2)
     if imageSize > settings.TOTAL_FILE_SIZE:
-        raise ValidationError(f'Your attached file is too big to upload(Maximum {settings.TOTAL_FILE_SIZE} KB).')
+        raise ValidationError(
+            message=_('Your attached file is too big to upload(Maximum %(size_limit)s KB).'),
+            code='file_too_large',
+            params={
+                'size_limit':settings.TOTAL_FILE_SIZE
+            }
+        )
     return image
 
 def FileImagesChecking(files):
     #Check total images attach to the request
     if len(files) > settings.MAXINUM_MULTI_FILE:
-        raise ValidationError(f'The maximum files to upload simultaneously is {settings.MAXINUM_MULTI_FILE}.')
+        raise ValidationError(
+            message= _('The maximum files to upload simultaneously is %(multi_file_allow)s.'),
+            code='max_file_count_exceeded',
+            params={
+                'multi_file_allow':settings.MAXINUM_MULTI_FILE
+            }
+        )
     
     #Check totalSize from the fileinput
     inputSize = sum(round(i.size/1024,2) for i in files)#generator comprehension
     if inputSize > settings.TOTAL_MULTI_FILE_SIZE:
-        raise ValidationError(f'Your attached files are too big to upload(Maximum {settings.TOTAL_MULTI_FILE_SIZE} KB).')
-    
+        raise ValidationError(
+            message= _('Your attached files are too big to upload(Maximum %(multi_file_size_limit)s KB)'),
+            code='total_file_size_exceeded',
+            params={
+                'multi_file_size_limit':settings.TOTAL_MULTI_FILE_SIZE
+            }
+        )
     return files
 
 class SampleRecordForm(forms.Form):
