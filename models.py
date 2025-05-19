@@ -6,6 +6,7 @@ from .utils import get_file_path
 class Status(models.IntegerChoices):
     enable = (1,'Active')
     disable = (0,'Inactive')
+    __empty__ = ('-- Status --')
 
 class SampleRecord(models.Model):
     title = models.CharField(_("Title"), max_length=50)
