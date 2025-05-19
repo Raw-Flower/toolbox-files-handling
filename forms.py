@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, ProhibitNullCharactersValidator, FileExtensionValidator
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from .models import Status
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -86,3 +87,50 @@ class SampleRecordForm(forms.Form):
         image_multiple = self.cleaned_data.get('image_multiple')
         FileImagesChecking(image_multiple)
         return image_multiple
+    
+
+class RecordFilterForm(forms.Form):
+    id = forms.CharField(
+        help_text='filter_option',
+        required=False,
+        max_length = 250,
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder':'ID',
+            }
+        ),
+        validators = [
+            RegexValidator(regex='^[0-9]+$',message='This field contains unvalid characters.'),
+        ]
+    )
+    
+    title = forms.CharField(
+        help_text='filter_option',
+        required=False,
+        max_length = 250,
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder':'Title',
+            }
+        ),
+        validators = [
+            RegexValidator(regex='^[a-zA-Z0-9 ]+$',message='This field contains unvalid characters.'),
+        ]
+    )
+    
+    status = forms.ChoiceField(
+        help_text='filter_option',
+        required=False,
+        choices=Status.choices,
+        widget = forms.Select(
+            attrs={
+                'class':'form-control'
+            }
+        ),
+         validators=[
+            RegexValidator(regex='^[0-9]+$',message='This field contains unvalid characters.')
+        ]
+    )
+    

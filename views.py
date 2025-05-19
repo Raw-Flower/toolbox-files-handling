@@ -1,7 +1,8 @@
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, ListView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import SampleRecordForm
+from django.db.models import Q
+from .forms import SampleRecordForm, RecordFilterForm
 from .models import SampleRecord, ImageRecord
 from .model_utils import saveRecord, SaveMultiImages
 
@@ -9,10 +10,10 @@ from .model_utils import saveRecord, SaveMultiImages
 class IndexView(TemplateView):
     template_name = 'image_mngt/core/index.html'
     
-class ImageRecorCreationView(FormView):
+class SampleCreationView(FormView):
     template_name = 'image_mngt/core/record_add.html'
     form_class = SampleRecordForm
-    success_url = reverse_lazy('image_mngt:image_creation')
+    success_url = reverse_lazy('image_mngt:add')
     
     def post(self, request, *args, **kwargs):
         form = self.get_form()
@@ -31,3 +32,31 @@ class ImageRecorCreationView(FormView):
     def form_invalid(self, form):
         messages.error(request=self.request, message='Your data submitted has some errors. please check and try again.')
         return super().form_invalid(form)
+    
+class SampleListView(ListView):
+    template_name = 'image_mngt/core/record_list.html'
+    queryset = SampleRecord.objects.all()
+    model = SampleRecord
+    ordering = ['-id','createtime']
+    paginate_by = 10
+    context_object_name = 'records'
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['filter_form'] = RecordFilterForm(self.request.GET)
+        return context
+    
+    def get_queryset(self):
+        if self.request.GET:
+            filter_form = RecordFilterForm(self.request.GET)
+            if filter_form.is_valid():
+                query_filters = Q(id__exact = filter_form.cleaned_data['id']) if filter_form.cleaned_data['id']!='' else Q()
+                query_filters &= Q(title__icontains = filter_form.cleaned_data['title']) if filter_form.cleaned_data['title']!='' else Q()
+                query_filters &= Q(status__exact = filter_form.cleaned_data['status']) if filter_form.cleaned_data['status']!='' else Q(status=1)
+                queryset = SampleRecord.objects.filter(query_filters)
+                return queryset
+            else:
+                messages.error(request=self.request,message='Your filters have some issues, please check.')
+        queryset = SampleRecord.objects.all()
+        return queryset
+        

@@ -4,12 +4,14 @@
         <legend class="float-none w-auto px-3" >{{title}}</legend>
         {% for field in form %}
             <div class='mb-3'>
-                <label for="{{field.id_for_label}}">{{field.label}}</label>
-                {{field|setValidationClass}}
-                {% if field.data == None %}
+                {% if field.help_text != 'filter_option' %}
+                    <label for="{{field.id_for_label}}">{{field.label}}</label>
+                    {{field|setValidationClass}}
                     <div id="{{field.auto_id}}_helptext" class="form-text">
                         {{field.help_text}}
                     </div>   
+                    {% else %}
+                        {{field|setValidationClass}}
                 {% endif %}
                 {% if field.errors %}
                     {% for error in field.errors %}
