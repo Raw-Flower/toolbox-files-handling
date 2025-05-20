@@ -1,0 +1,33 @@
+{% extends 'image_mngt/base/base.html' %}
+{% block title %}Record status change{% endblock title %}
+{% block body %}
+{% include 'image_mngt/includes/messages.html' %}
+    <div class="card">
+        <div class="card-body">
+            {% if instance %}
+                <form novalidate method='POST'>
+                    {% csrf_token %}
+                    <div class="alert alert-primary" role="alert">
+                        <h4 class="alert-heading"><i class="bi bi-info-circle-fill"></i> Attention</h4>
+                        {% if instance.status == 1 %}
+                            <p>The following record <span class='fw-bold'>({{instance.id}} - {{instance.title}})</span> will be not longer available for update annymore.</p>
+                            <p>Are you sure to continue?</p>
+                            <hr>
+                            <button class='btn btn-outline-primary' type='submit'>Yes, disable</button>
+                        {% else %}
+                            <p>The following record <span class='fw-bold'>({{instance.id}} - {{instance.title}})</span> will be available once again for update.</p>
+                            <p>Are you sure to continue?</p>
+                            <hr>
+                            <button class='btn btn-outline-primary' type='submit'>Yes, enable</button>
+                        {% endif %}
+                      </div>
+                    <div class='mt-2'>
+                        <a href='{% url "image_mngt:list" %}' class='btn btn-warning'>Go back to list</a>
+                    </div>
+                </form>
+                {% else %}
+                <h6>Record not available</h6>
+            {% endif %}
+        </div>
+    </div>
+{% endblock body %}

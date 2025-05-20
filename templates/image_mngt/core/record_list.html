@@ -42,10 +42,12 @@
                                         <td>{{item.title}}</td>
                                         <td>{{item.get_status_display}}</td>
                                         <td>
-                                            <span><a href='' title='Edit'><i class="bi bi-pencil"></i></a></span>
-                                            <span><a href='' title='Disable'><i class="bi bi-eye-slash-fill"></i></a></span>
-                                            {% if item.status == 0 %}
-                                                <span><a href='' title='Delete'><i class="bi bi-trash"></i></a></span>
+                                            {% if item.status == 1 %}
+                                                <span><a href='' title='Edit'><i class="bi bi-pencil"></i></a></span>
+                                                <span><a href='{% url "image_mngt:status_change" pk=item.id %}' title='Disable'><i class="bi bi-eye-slash-fill"></i></a></span>
+                                                {% else %}
+                                                <span><a href='{% url "image_mngt:status_change" pk=item.id %}' title='Enable'><i class="bi bi-eye-fill"></i></a></span>
+                                                <span><a href='{% url "image_mngt:delete" pk=item.id %}' title='Delete'><i class="bi bi-trash"></i></a></span>
                                             {% endif %}
                                         </td>
                                     </tr>
