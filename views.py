@@ -1,11 +1,13 @@
-from django.views.generic import TemplateView, FormView, ListView, DeleteView
+from django.views.generic import TemplateView, FormView, ListView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
-from .forms import SampleRecordForm, RecordFilterForm
+from django.http import HttpResponseRedirect
+from .forms import SampleRecordForm, RecordFilterForm, SampleRecordModelForm
 from .models import SampleRecord, ImageRecord
 from .model_utils import saveRecord, SaveMultiImages
+from .utils import remove_image
 
 # Create your views here.
 class IndexView(TemplateView):
@@ -37,7 +39,7 @@ class SampleCreationView(FormView):
 class SampleListView(ListView):
     template_name = 'image_mngt/core/record_list.html'
     model = SampleRecord
-    paginate_by = 10
+    paginate_by = 5
     context_object_name = 'records'
     
     def get_context_data(self, **kwargs):
@@ -85,7 +87,29 @@ class SampleDeleteView(DeleteView):
         messages.success(request=self.request, message='Sample record has been deleted succesfully.')
         return super().form_valid(form)
     
-
+class SampleUpdateView(UpdateView):
+    template_name = 'image_mngt/core/record_update.html'
+    model = SampleRecord
+    queryset = SampleRecord.objects.filter(status=1)
+    form_class = SampleRecordModelForm
     
+    def get_success_url(self):
+        success_url = reverse_lazy("image_mngt:update", kwargs={"pk":self.get_object()})
+        return str(success_url)
+    
+    def form_valid(self, form):
+        instance = self.get_object()
+        #Check if new image was send from form
+        if instance.image != form.cleaned_data['image']:
+            #If send, remove image from main folder
+            remove_image(instance.image)
+        messages.success(request=self.request, message='Sample record has been updated successfully.')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        messages.error(request=self.request,message='Your data have some issues, please check and try again.')
+        return response
+        
     
     
