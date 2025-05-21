@@ -1,6 +1,7 @@
 from datetime import datetime
 import uuid
 import shutil
+import os
 from django.conf import settings
 
 def get_folder_name():
@@ -18,10 +19,19 @@ def get_file_path(instance,filename):
 
 def remove_folder(foldername):
     folder_path = f'{settings.BASE_DIR}/media/images_mngt/{foldername}'
-    print(folder_path)
     try:
         shutil.rmtree(folder_path)
     except FileNotFoundError:
         print(f'ERROR: Folder not found ({foldername}).')  
     except Exception as e:
         print(f'ERROR({type(e).__name__}): {e}')
+        
+def remove_image(filename):
+    image_path = f'{settings.BASE_DIR}/media/{filename}'
+    try:
+        os.remove(image_path)
+    except FileNotFoundError:
+        print(f'ERROR: Image not found in ({image_path}).')  
+    except Exception as e:
+        print(f'ERROR({type(e).__name__}): {e}')
+    

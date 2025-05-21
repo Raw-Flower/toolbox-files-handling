@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, ProhibitNullCharactersValidator, FileExtensionValidator
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from .models import Status
+from .models import Status, SampleRecord
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -134,3 +134,19 @@ class RecordFilterForm(forms.Form):
         ]
     )
     
+class SampleRecordModelForm(forms.ModelForm):
+    image = forms.ImageField(
+        widget=forms.FileInput(
+            attrs={
+                'class':'form-control'
+            }
+        ),
+        validators=[
+            FileExtensionValidator(allowed_extensions=settings.CUSTOM_FILE_EXTENSIONS,message=f'Invalid file extension, valid file extensions are {settings.CUSTOM_FILE_EXTENSIONS}'),
+            imagesTotalSize_validator,
+        ]
+    )
+    
+    class Meta:
+        model = SampleRecord
+        fields = ['title','image']

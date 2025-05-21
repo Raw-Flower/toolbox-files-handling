@@ -38,12 +38,12 @@
                             {% if records|length > 0 %}
                                 {% for item in records %}
                                     <tr>
-                                        <td>{{item.id}}</td>
+                                        <td><a href='{% url "image_mngt:update" pk=item.id %}'>{{item.id}}</a></td>
                                         <td>{{item.title}}</td>
                                         <td>{{item.get_status_display}}</td>
                                         <td>
                                             {% if item.status == 1 %}
-                                                <span><a href='' title='Edit'><i class="bi bi-pencil"></i></a></span>
+                                                <span><a href='{% url "image_mngt:update" pk=item.id %}' title='Edit'><i class="bi bi-pencil"></i></a></span>
                                                 <span><a href='{% url "image_mngt:status_change" pk=item.id %}' title='Disable'><i class="bi bi-eye-slash-fill"></i></a></span>
                                                 {% else %}
                                                 <span><a href='{% url "image_mngt:status_change" pk=item.id %}' title='Enable'><i class="bi bi-eye-fill"></i></a></span>

@@ -2,24 +2,57 @@
 {% if form %}
     <fieldset class="border rounded-2 p-3">
         <legend class="float-none w-auto px-3" >{{title}}</legend>
-        {% for field in form %}
+        {% for input in form %}
             <div class='mb-3'>
-                {% if field.help_text != 'filter_option' %}
-                    <label for="{{field.id_for_label}}">{{field.label}}</label>
-                    {{field|setValidationClass}}
-                    <div id="{{field.auto_id}}_helptext" class="form-text">
-                        {{field.help_text}}
+                {% if input.help_text != 'filter_option' %}
+                    {% comment %}
+                        Render normal inputs
+                    {% endcomment %}
+                    <label for="{{input.id_for_label}}">{{input.label}}</label>
+                    {{input|setValidationClass}}
+                    {% if input.field.widget.input_type == 'file' %}
+                        {% comment %}
+                            Check widgetType, if file, render the path and preview(only for images)
+                        {% endcomment %}
+                        <div class='fileContent'>
+                            {% if input.value %}
+                                <span class='form-text'>Current uploaded file: <strong>{{input.value.name}}</strong></span>
+                            {% endif %}
+                            {% if input.value.name|is_image %}
+                                <div>
+                                    <span class='form-text'><strong>Preview :</strong></span>
+                                    <div>
+                                        <img class='img-thumbnail mt-2' src="{{input.value.url}}" alt="reference image" width="150" height="100">
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    {% comment %}
+                        Display help_text valuue
+                    {% endcomment %}
+                    <div id="{{input.auto_id}}_helptext" class="form-text">
+                        {{input.help_text}}
                     </div>   
                     {% else %}
-                        {{field|setValidationClass}}
+                        {% comment %}
+                            Render for filter forms, help_text == filter_option
+                        {% endcomment %}
+                        {{input|setValidationClass}} 
                 {% endif %}
-                {% if field.errors %}
-                    {% for error in field.errors %}
+                {% if input.errors %}
+                    {% comment %}
+                        Check errors and display it (if found)
+                    {% endcomment %}
+                    {% for error in input.errors %}
                         <div class="invalid-feedback">
                             {{error}}
                         </div>
                     {% endfor %}
                     {% else %}
+                        {% comment %}
+                            No errors detected, render success
+                        {% endcomment %}
                         <div class='valid-feedback'>Looks good!</div>
                 {% endif %}
             </div>
