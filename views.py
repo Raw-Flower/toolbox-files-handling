@@ -3,7 +3,6 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponseRedirect
 from .forms import SampleRecordForm, RecordFilterForm, SampleRecordModelForm
 from .models import SampleRecord, ImageRecord
 from .model_utils import saveRecord, SaveMultiImages
@@ -96,13 +95,19 @@ class SampleUpdateView(UpdateView):
     def get_success_url(self):
         success_url = reverse_lazy("image_mngt:update", kwargs={"pk":self.get_object()})
         return str(success_url)
-    
+        
     def form_valid(self, form):
-        instance = self.get_object()
-        #Check if new image was send from form
-        if instance.image != form.cleaned_data['image']:
-            #If send, remove image from main folder
-            remove_image(instance.image)
+        instance = self.get_object()     
+        has_image = True if instance.image else False # Check if image2uploaod its new or replacement
+        #Check if new image was send from form or remove field has value
+        if (instance.image != form.cleaned_data['image'] and has_image) or (form.cleaned_data['remove'] == 'on'):
+            remove_image(instance.image) # Remove image from resource
+            
+            #Check if was by checked the remove field
+            if form.cleaned_data['remove'] == 'on':
+                form.instance.image = None # Break relation between image field value and model
+                del(form.cleaned_data['remove']) # Delete remove value to avoid .save issuues
+                
         messages.success(request=self.request, message='Sample record has been updated successfully.')
         return super().form_valid(form)
     

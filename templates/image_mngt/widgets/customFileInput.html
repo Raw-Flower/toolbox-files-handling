@@ -1,0 +1,6 @@
+<input type="{{widget.type}}" id='{{widget.attrs.id}}' name="{{widget.name}}" required={{widget.required}} class='form-control' accept='{{widget.attrs.accept}}'>
+{% if widget.value %}
+    <span class='form-text'>Current uploaded file: <strong>{{widget.value.name}}</strong></span>
+    <input type="checkbox" name="remove" id="id_remove">
+    <label for="id_remove">{{widget.clear_checkbox_label}}</label>
+{% endif %}

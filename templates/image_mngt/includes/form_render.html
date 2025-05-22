@@ -15,9 +15,6 @@
                             Check widgetType, if file, render the path and preview(only for images)
                         {% endcomment %}
                         <div class='fileContent'>
-                            {% if input.value %}
-                                <span class='form-text'>Current uploaded file: <strong>{{input.value.name}}</strong></span>
-                            {% endif %}
                             {% if input.value.name|is_image %}
                                 <div>
                                     <span class='form-text'><strong>Preview :</strong></span>
