@@ -136,17 +136,21 @@ class RecordFilterForm(forms.Form):
     
 class SampleRecordModelForm(forms.ModelForm):
     image = forms.ImageField(
-        widget=forms.FileInput(
-            attrs={
-                'class':'form-control'
-            }
-        ),
+        required=False,        
         validators=[
             FileExtensionValidator(allowed_extensions=settings.CUSTOM_FILE_EXTENSIONS,message=f'Invalid file extension, valid file extensions are {settings.CUSTOM_FILE_EXTENSIONS}'),
             imagesTotalSize_validator,
         ]
     )
-    
+    image.widget.template_name = 'image_mngt/widgets/customFileInput.html'
+    image.widget.clear_checkbox_label = 'Remove'
+ 
     class Meta:
         model = SampleRecord
         fields = ['title','image']
+        
+    def clean(self):
+        clean_data = super().clean()
+        post_data = self.data
+        clean_data['remove'] = post_data.get('remove','off') #Manually add the remove field
+        return clean_data
