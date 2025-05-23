@@ -1,5 +1,6 @@
 # 🧰 Toolbox Project - Files handling
 
+![Toolbox Badge](https://img.shields.io/badge/Toolbox-Auth%20Kit-blue?style=flat-square&logo=django&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)
 ![Django](https://img.shields.io/badge/Django-5.x-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
