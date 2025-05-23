@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, ProhibitNullCharactersValidator, FileExtensionValidator
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from .models import Status, SampleRecord
+from .models import Status, SampleRecord, ImageRecord
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -135,6 +135,11 @@ class RecordFilterForm(forms.Form):
     )
     
 class SampleRecordModelForm(forms.ModelForm):
+    id = forms.CharField(
+        label='ID',
+        disabled=True,
+    )
+    
     image = forms.ImageField(
         required=False,        
         validators=[
@@ -147,10 +152,38 @@ class SampleRecordModelForm(forms.ModelForm):
  
     class Meta:
         model = SampleRecord
-        fields = ['title','image']
+        fields = ['id','title','image']
         
     def clean(self):
         clean_data = super().clean()
         post_data = self.data
         clean_data['remove'] = post_data.get('remove','off') #Manually add the remove field
         return clean_data
+    
+class ChildRecordModelForm(forms.ModelForm):
+    id = forms.CharField(
+        label='ID',
+        disabled=True,
+    )
+    
+    image = forms.ImageField(
+        required=False,        
+        validators=[
+            FileExtensionValidator(allowed_extensions=settings.CUSTOM_FILE_EXTENSIONS,message=f'Invalid file extension, valid file extensions are {settings.CUSTOM_FILE_EXTENSIONS}'),
+            imagesTotalSize_validator,
+        ]
+    )
+    image.widget.template_name = 'image_mngt/widgets/customFileInput.html'
+    image.widget.clear_checkbox_label = 'Remove'
+ 
+    class Meta:
+        model = ImageRecord
+        fields = ['id','parent_record','image']
+        exclude = ['parent_record']
+        
+    def clean(self):
+        clean_data = super().clean()
+        post_data = self.data
+        clean_data['remove'] = post_data.get('remove','off') #Manually add the remove field
+        return clean_data
+

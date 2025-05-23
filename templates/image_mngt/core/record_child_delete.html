@@ -1,0 +1,20 @@
+{% extends 'image_mngt/base/base.html' %}
+{% block title %}Child delete{% endblock title %}
+{% block body %}
+    <div class="card">
+        <div class="card-body">
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading"> <i class="bi bi-exclamation-triangle"></i> <strong>Stop right there!</strong>  </h4>
+                <p>The following child record (<strong>{{object.id}}</strong>) will be removed from the DB and will not be accessible again.</p>
+                <hr>
+                <p class="mb-0">Are you sure to continue?</p>
+                <div class='mt-2'>
+                    <form method='post'>
+                        {% csrf_token %}
+                        <button class='btn btn-danger' type='submit'> <i class="bi bi-trash"></i> Yes, delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

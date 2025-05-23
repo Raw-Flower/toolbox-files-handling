@@ -3,10 +3,10 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
-from .forms import SampleRecordForm, RecordFilterForm, SampleRecordModelForm
+from .forms import SampleRecordForm, RecordFilterForm, SampleRecordModelForm, ChildRecordModelForm
 from .models import SampleRecord, ImageRecord
 from .model_utils import saveRecord, SaveMultiImages
-from .utils import remove_image
+from .utils import checkFilesReplace
 
 # Create your views here.
 class IndexView(TemplateView):
@@ -92,22 +92,18 @@ class SampleUpdateView(UpdateView):
     queryset = SampleRecord.objects.filter(status=1)
     form_class = SampleRecordModelForm
     
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        context['images_related'] = ImageRecord.objects.filter(parent_record=self.get_object().id)
+        return context
+    
     def get_success_url(self):
         success_url = reverse_lazy("image_mngt:update", kwargs={"pk":self.get_object()})
         return str(success_url)
         
     def form_valid(self, form):
         instance = self.get_object()     
-        has_image = True if instance.image else False # Check if image2uploaod its new or replacement
-        #Check if new image was send from form or remove field has value
-        if (instance.image != form.cleaned_data['image'] and has_image) or (form.cleaned_data['remove'] == 'on'):
-            remove_image(instance.image) # Remove image from resource
-            
-            #Check if was by checked the remove field
-            if form.cleaned_data['remove'] == 'on':
-                form.instance.image = None # Break relation between image field value and model
-                del(form.cleaned_data['remove']) # Delete remove value to avoid .save issuues
-                
+        form = checkFilesReplace(instance,form)
         messages.success(request=self.request, message='Sample record has been updated successfully.')
         return super().form_valid(form)
     
@@ -116,5 +112,35 @@ class SampleUpdateView(UpdateView):
         messages.error(request=self.request,message='Your data have some issues, please check and try again.')
         return response
         
+class ChildUpdateView(UpdateView):
+    template_name = 'image_mngt/core/record_child_update.html'
+    model = ImageRecord
+    queryset = ImageRecord.objects.filter(status=1)
+    form_class = ChildRecordModelForm
     
+    def get_success_url(self):
+        success_url = reverse_lazy("image_mngt:update_child", kwargs={"pk":self.get_object().id})
+        return str(success_url)
     
+    def form_valid(self, form):
+        instance = self.get_object()     
+        form = checkFilesReplace(instance,form)
+        messages.success(request=self.request, message='Child record has been updated successfully.')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        messages.error(request=self.request,message='Your data have some issues, please check and try again.')
+        return response
+    
+class ChildDeleteView(DeleteView):
+    template_name = 'image_mngt/core/record_child_delete.html'
+    model = ImageRecord
+    
+    def get_success_url(self):
+        success_url = reverse_lazy("image_mngt:update", kwargs={"pk":self.get_object().parent_record})
+        return str(success_url)
+    
+    def form_valid(self, form):
+        messages.success(request=self.request, message='Child record has been deleted succesfully.')
+        return super().form_valid(form)
