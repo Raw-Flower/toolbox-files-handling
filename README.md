@@ -107,7 +107,7 @@ class SampleRecordModelForm(forms.ModelForm):
 Uploaded images are saved under:
 
 ```
-media/records/<timestamp>/
+media/<app_name>/<timestamp>/
 ```
 
 Each image filename is UUID-based:
@@ -128,11 +128,9 @@ This prevents name collisions and simplifies cleanup.
 
 ---
 
-## 🧠 Final Notes
+## 🤝 Credits
 
-> Part of the **Toolbox Project**, this app provides a solid foundation for media handling in Django. Focused on clarity, maintainability, and practical file lifecycle control.
-
-Pull requests and contributions welcome!
+Thanks for following the development of Toolbox project on GitHub. Contributions and feedback are welcome to continue improving and scaling the platform.
 
 ---
 
