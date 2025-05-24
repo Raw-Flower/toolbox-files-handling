@@ -147,7 +147,7 @@ class SampleRecordModelForm(forms.ModelForm):
             imagesTotalSize_validator,
         ]
     )
-    image.widget.template_name = 'image_mngt/widgets/customFileInput.html'
+    image.widget.template_name = 'core/widgets/customFileInput.html'
     image.widget.clear_checkbox_label = 'Remove'
  
     class Meta:
@@ -173,7 +173,7 @@ class ChildRecordModelForm(forms.ModelForm):
             imagesTotalSize_validator,
         ]
     )
-    image.widget.template_name = 'image_mngt/widgets/customFileInput.html'
+    image.widget.template_name = 'core/widgets/customFileInput.html'
     image.widget.clear_checkbox_label = 'Remove'
  
     class Meta:

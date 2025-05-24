@@ -1,0 +1,22 @@
+{% extends 'core/base/main_base.html' %}
+{% block title %}
+    Image mngt - {% block subtitle %}{% endblock subtitle %}
+{% endblock title %}
+{% block body %}
+<div class='row'>
+    <div class='col-3'>
+        <div class="card">
+            <div class="card-header">Image management menu</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href='{% url "image_mngt:index" %}' class="card-link">Index</a></li>
+                <li class="list-group-item"><a href='{% url "image_mngt:add" %}' class="card-link">Create record</a></li>
+                <li class="list-group-item"><a href='{% url "image_mngt:list" %}' class="card-link">View records</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='col-9'>
+        {% block content %}
+        {% endblock content %}
+    </div>
+</div>
+{% endblock body %}

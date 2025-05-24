@@ -1,11 +1,11 @@
-{% extends 'image_mngt/base/base.html' %}
-{% block title %}Child update{% endblock title %}
-{% block body %}
-    {% include 'image_mngt/includes/messages.html' %}
+{% extends 'image_mngt/base/main.html' %}
+{% block subtitle %}Child update{% endblock subtitle %}
+{% block content %}
+    {% include 'core/includes/messages.html' %}
     <div class="card">
         <div class="card-body">
             <form method="post" enctype='multipart/form-data' novalidate>
-                {% include 'image_mngt/includes/form_render.html' with form=form title='Child record details' only %}
+                {% include 'core/includes/form_render.html' with form=form title='Child record details' only %}
                 {% if form %}
                     <div class='mt-3'>
                         {% csrf_token %}
@@ -24,4 +24,4 @@
             </div>
         </div>
     </div>
-{% endblock body %}
+{% endblock content %}
