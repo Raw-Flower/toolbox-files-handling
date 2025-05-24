@@ -1,7 +1,7 @@
-{% extends 'image_mngt/base/base.html' %}
-{% block title %}Record status change{% endblock title %}
-{% block body %}
-{% include 'image_mngt/includes/messages.html' %}
+{% extends 'image_mngt/base/main.html' %}
+{% block subtitle %}Status change{% endblock subtitle %}
+{% block content %}
+{% include 'core/includes/messages.html' %}
     <div class="card">
         <div class="card-body">
             {% if instance %}
@@ -31,4 +31,4 @@
             </div>
         </div>
     </div>
-{% endblock body %}
+{% endblock content %}

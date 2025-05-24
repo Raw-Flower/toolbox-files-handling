@@ -1,0 +1,18 @@
+{% extends 'image_mngt/base/main.html' %}
+{% block subtitle %}Home{% endblock subtitle %}
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Welcome!</h5>
+        <p class="card-text">Modular image management for Django with the following features: </p>
+        <ul>
+            <li>Multi-image uploads</li>
+            <li>UUID naming</li>
+            <li>Custom widget previews</li>
+            <li>Simple, scalable, and DRY</li>
+        </ul>
+        <a href='{% url "image_mngt:add" %}' class="btn btn-primary">Lest begin</a>
+    </div>
+</div>
+{% endblock content %}
+

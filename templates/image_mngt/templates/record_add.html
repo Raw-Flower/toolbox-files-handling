@@ -1,11 +1,11 @@
-{% extends 'image_mngt/base/base.html' %}
-{% block title %}Record creation{% endblock title %}
-{% block body %}
-{% include 'image_mngt/includes/messages.html' %}
+{% extends 'image_mngt/base/main.html' %}
+{% block subtitle %}Add{% endblock subtitle %}
+{% block content %}
+{% include 'core/includes/messages.html' %}
     <div class="card">
         <div class="card-body">
             <form enctype='multipart/form-data' novalidate method='POST'>
-                {% include 'image_mngt/includes/form_render.html' with form=form title='Image record information' only  %}
+                {% include 'core/includes/form_render.html' with form=form title='Record details' only  %}
                 {% if form %}
                     <div class='mt-3'>
                         {% csrf_token %}
@@ -19,4 +19,4 @@
             </form>
         </div>
     </div>
-{% endblock body %}
+{% endblock content %}

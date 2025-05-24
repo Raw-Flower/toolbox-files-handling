@@ -1,11 +1,11 @@
-{% extends 'image_mngt/base/base.html' %}
-{% block title %}Record update{% endblock title %}
-{% block body %}
-    {% include 'image_mngt/includes/messages.html' %}
+{% extends 'image_mngt/base/main.html' %}
+{% block subtitle %}Record update{% endblock subtitle %}
+{% block content %}
+    {% include 'core/includes/messages.html' %}
     <div class="card">
         <div class="card-body">
             <form method="post" enctype='multipart/form-data' novalidate>
-                {% include 'image_mngt/includes/form_render.html' with form=form title='Record details' only %}
+                {% include 'core/includes/form_render.html' with form=form title='Record details' only %}
                 {% if object %}
                     <hr>
                     <h4>Images related</h4>
@@ -59,4 +59,4 @@
             </div>
         </div>
     </div>
-{% endblock body %}
+{% endblock content %}

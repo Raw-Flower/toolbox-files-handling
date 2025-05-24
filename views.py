@@ -10,10 +10,10 @@ from .utils import checkFilesReplace
 
 # Create your views here.
 class IndexView(TemplateView):
-    template_name = 'image_mngt/core/index.html'
+    template_name = 'image_mngt/templates/index.html'
     
 class SampleCreationView(FormView):
-    template_name = 'image_mngt/core/record_add.html'
+    template_name = 'image_mngt/templates/record_add.html'
     form_class = SampleRecordForm
     success_url = reverse_lazy('image_mngt:add')
     
@@ -36,7 +36,7 @@ class SampleCreationView(FormView):
         return super().form_invalid(form)
     
 class SampleListView(ListView):
-    template_name = 'image_mngt/core/record_list.html'
+    template_name = 'image_mngt/templates/record_list.html'
     model = SampleRecord
     paginate_by = 5
     context_object_name = 'records'
@@ -57,11 +57,11 @@ class SampleListView(ListView):
                 return queryset
             else:
                 messages.error(request=self.request,message='Your filters have some issues, please check.')
-        queryset = SampleRecord.objects.all().order_by('-createtime')
+        queryset = SampleRecord.objects.filter(status='1').order_by('-createtime')
         return queryset
     
 class SampleStatusChangeView(TemplateView):
-    template_name = 'image_mngt/core/record_disable.html'
+    template_name = 'image_mngt/templates/record_disable.html'
     success_url = reverse_lazy("image_mngt:list")
         
     def get(self, request, pk, *args, **kwargs):
@@ -77,7 +77,7 @@ class SampleStatusChangeView(TemplateView):
         return redirect(self.success_url)
     
 class SampleDeleteView(DeleteView):
-    template_name = 'image_mngt/core/record_delete.html'
+    template_name = 'image_mngt/templates/record_delete.html'
     success_url = reverse_lazy("image_mngt:list")
     model = SampleRecord
     queryset = SampleRecord.objects.filter(status=0)
@@ -87,7 +87,7 @@ class SampleDeleteView(DeleteView):
         return super().form_valid(form)
     
 class SampleUpdateView(UpdateView):
-    template_name = 'image_mngt/core/record_update.html'
+    template_name = 'image_mngt/templates/record_update.html'
     model = SampleRecord
     queryset = SampleRecord.objects.filter(status=1)
     form_class = SampleRecordModelForm
@@ -113,7 +113,7 @@ class SampleUpdateView(UpdateView):
         return response
         
 class ChildUpdateView(UpdateView):
-    template_name = 'image_mngt/core/record_child_update.html'
+    template_name = 'image_mngt/templates/record_child_update.html'
     model = ImageRecord
     queryset = ImageRecord.objects.filter(status=1)
     form_class = ChildRecordModelForm
@@ -134,7 +134,7 @@ class ChildUpdateView(UpdateView):
         return response
     
 class ChildDeleteView(DeleteView):
-    template_name = 'image_mngt/core/record_child_delete.html'
+    template_name = 'image_mngt/templates/record_child_delete.html'
     model = ImageRecord
     
     def get_success_url(self):
